@@ -1,0 +1,14 @@
+{
+  "scheme": "custom",
+  "schemeDefinition": "major.minor.patch[-build]",
+  "versionFile": "./package.json",
+  "files": [],
+  "rules": [
+    {
+      "trigger": "commit",
+      "bump": "patch",
+      "branch": "master",
+      "tag": true
+    }
+  ]
+}
