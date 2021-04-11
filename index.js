@@ -5,7 +5,8 @@ const heroku = new Heroku({ token: process.env.HEROKU_API_TOKEN });
 
 // Run your GitHub Action!
 Toolkit.run(
-  async (tools) => {
+  async tools => {
+    console.log("tools.context.payload: ", tools.context.payload);
     const pr = tools.context.payload.pull_request;
 
     // Required information
@@ -27,7 +28,7 @@ Toolkit.run(
       version,
       fork,
       pr_number,
-      source_url,
+      source_url
     });
 
     let action = tools.context.payload.action;
@@ -43,7 +44,7 @@ Toolkit.run(
       tools.log.complete("Fetched review app list");
 
       // Filter to the one for this PR
-      const app = reviewApps.find((app) => app.pr_number == pr_number);
+      const app = reviewApps.find(app => app.pr_number == pr_number);
       if (!app) {
         tools.log.info(`Could not find review app for PR number ${pr_number}`);
         return;
@@ -71,7 +72,7 @@ Toolkit.run(
 
     const perms = await tools.github.repos.getCollaboratorPermissionLevel({
       ...tools.context.repo,
-      username: tools.context.actor,
+      username: tools.context.actor
     });
 
     if (!requiredCollaboratorPermission.includes(perms.data.permission)) {
@@ -88,7 +89,7 @@ Toolkit.run(
       await tools.github.issues.addLabels({
         ...tools.context.repo,
         labels: ["review-app"],
-        issue_number: pr_number,
+        issue_number: pr_number
       });
     } else if (action === "labeled") {
       const labelName = tools.context.payload.label.name;
@@ -121,14 +122,14 @@ Toolkit.run(
             pipeline: process.env.HEROKU_PIPELINE_ID,
             source_blob: {
               url: source_url,
-              version,
+              version
             },
             fork_repo_id,
             pr_number,
             environment: {
-              GIT_REPO_URL: repo_url,
-            },
-          },
+              GIT_REPO_URL: repo_url
+            }
+          }
         });
         tools.log.complete("Created review app");
       } catch (e) {
@@ -143,18 +144,7 @@ Toolkit.run(
     tools.log.success("Action complete");
   },
   {
-    event: [
-      "pull_request.opened",
-      "pull_request.reopened",
-      "pull_request.synchronize",
-      "pull_request.labeled",
-      "pull_request.closed",
-      "pull_request_target.opened",
-      "pull_request_target.reopened",
-      "pull_request_target.synchronize",
-      "pull_request_target.labeled",
-      "pull_request_target.closed",
-    ],
-    secrets: ["GITHUB_TOKEN", "HEROKU_API_TOKEN", "HEROKU_PIPELINE_ID"],
+    event: ["release.prereleased"],
+    secrets: ["GITHUB_TOKEN", "HEROKU_API_TOKEN", "HEROKU_PIPELINE_ID"]
   }
 );
