@@ -5,7 +5,7 @@ const heroku = new Heroku({ token: process.env.HEROKU_API_TOKEN });
 
 // Run your GitHub Action!
 Toolkit.run(
-  async (tools) => {
+  async tools => {
     const pr = tools.context.payload.pull_request;
 
     // Required information
@@ -27,7 +27,7 @@ Toolkit.run(
       version,
       fork,
       pr_number,
-      source_url,
+      source_url
     });
 
     let action = tools.context.payload.action;
@@ -43,7 +43,7 @@ Toolkit.run(
       tools.log.complete("Fetched review app list");
 
       // Filter to the one for this PR
-      const app = reviewApps.find((app) => app.pr_number == pr_number);
+      const app = reviewApps.find(app => app.pr_number == pr_number);
       if (!app) {
         tools.log.info(`Could not find review app for PR number ${pr_number}`);
         return;
@@ -66,12 +66,11 @@ Toolkit.run(
       requiredCollaboratorPermission = ["triage", "write", "maintain", "admin"];
     }
 
-    const reviewAppLabelName =
-      process.env.REVIEW_APP_LABEL_NAME || "review-app";
+    const reviewAppLabelName = "review-app";
 
     const perms = await tools.github.repos.getCollaboratorPermissionLevel({
       ...tools.context.repo,
-      username: tools.context.actor,
+      username: tools.context.actor
     });
 
     if (!requiredCollaboratorPermission.includes(perms.data.permission)) {
@@ -82,17 +81,7 @@ Toolkit.run(
 
     let createReviewApp = false;
 
-    console.log('action: ', action)
-
-    if (["opened", "reopened", "synchronize"].indexOf(action) !== -1) {
-      tools.log.info("PR opened by collaborator");
-      createReviewApp = true;
-      await tools.github.issues.addLabels({
-        ...tools.context.repo,
-        labels: ["review-app"],
-        issue_number: pr_number,
-      });
-    } else if (action === "labeled") {
+    if (action === "labeled") {
       const labelName = tools.context.payload.label.name;
       tools.log.info(`${labelName} label was added by collaborator`);
 
@@ -123,14 +112,14 @@ Toolkit.run(
             pipeline: process.env.HEROKU_PIPELINE_ID,
             source_blob: {
               url: source_url,
-              version,
+              version
             },
             fork_repo_id,
             pr_number,
             environment: {
-              GIT_REPO_URL: repo_url,
-            },
-          },
+              GIT_REPO_URL: repo_url
+            }
+          }
         });
         tools.log.complete("Created review app");
       } catch (e) {
@@ -149,8 +138,8 @@ Toolkit.run(
       "pull_request.labeled",
       "pull_request.closed",
       "pull_request_target.labeled",
-      "pull_request_target.closed",
+      "pull_request_target.closed"
     ],
-    secrets: ["GITHUB_TOKEN", "HEROKU_API_TOKEN", "HEROKU_PIPELINE_ID"],
+    secrets: ["GITHUB_TOKEN", "HEROKU_API_TOKEN", "HEROKU_PIPELINE_ID"]
   }
 );
