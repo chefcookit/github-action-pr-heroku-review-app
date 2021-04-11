@@ -66,7 +66,7 @@ Toolkit.run(
       requiredCollaboratorPermission = ["triage", "write", "maintain", "admin"];
     }
 
-    const reviewAppLabelName = "review-app";
+    const reviewAppLabelName = "review app";
 
     const perms = await tools.github.repos.getCollaboratorPermissionLevel({
       ...tools.context.repo,
