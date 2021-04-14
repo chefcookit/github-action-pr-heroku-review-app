@@ -1,0 +1,18 @@
+name: Manage versions
+
+on: [push, pull_request]
+  
+jobs:
+  version-manager:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - name: Bump Global and Client Version
+        uses: michmich112/version-bumper@e72c35bbefdb46486828958ebe10d39a27f5f110
+        with:
+          options-file: "./.github/version-options.json"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
