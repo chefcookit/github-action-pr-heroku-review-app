@@ -117,7 +117,7 @@ Toolkit.run(
               url: source_url,
               version
             },
-            repo_id,
+            fork_repo_id: repo_id,
             pr_number,
             environment: {
               GIT_REPO_URL: repo_url
