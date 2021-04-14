@@ -8,6 +8,8 @@ Toolkit.run(
   async tools => {
     const pr = tools.context.payload.pull_request;
 
+    console.log('pr: ', pr);
+
     // Required information
     const event = tools.context.event;
     const branch = pr.head.ref;
@@ -17,9 +19,9 @@ Toolkit.run(
     const repo_url = pr.head.repo.html_url;
     const source_url = `${pr.head.repo.html_url}/tarball/${branch}`;
 
-    let fork_repo_id;
+    let repo_id;
     if (fork) {
-      fork_repo_id = pr.head.repo.id;
+      repo_id = pr.head.repo.id;
     }
 
     tools.log.debug("Deploy Info", {
@@ -114,7 +116,7 @@ Toolkit.run(
               url: source_url,
               version
             },
-            fork_repo_id,
+            repo_id,
             pr_number,
             environment: {
               GIT_REPO_URL: repo_url
