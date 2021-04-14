@@ -8,7 +8,8 @@ Toolkit.run(
   async tools => {
     const pr = tools.context.payload.pull_request;
 
-    console.log('pr: ', pr);
+    const user_name = pr.user.login;
+    const token = process.env.GITHUB_TOKEN;
 
     // Required information
     const event = tools.context.event;
@@ -17,7 +18,7 @@ Toolkit.run(
     const fork = pr.head.repo.fork;
     const pr_number = pr.number;
     const repo_url = pr.head.repo.html_url;
-    const source_url = `${pr.head.repo.html_url}/tarball/${branch}`;
+    const source_url = `https://${user_name}:${token}@api.github.com/repos/${pr.head.repo.full_name}/tarball/${branch}`;
 
     let repo_id;
     if (fork) {
