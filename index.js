@@ -109,7 +109,7 @@ Toolkit.run(
       // Otherwise we can complete it in this run
       try {
         tools.log.pending("Creating review app");
-        const resp = await heroku.post("/review-apps", {
+        await heroku.post("/review-apps", {
           body: {
             branch,
             pipeline: process.env.HEROKU_PIPELINE_ID,
@@ -118,13 +118,9 @@ Toolkit.run(
               version
             },
             fork_repo_id: repo_id,
-            pr_number,
-            environment: {
-              GIT_REPO_URL: repo_url
-            }
+            pr_number
           }
         });
-        console.log("resp: ", resp);
         tools.log.complete("Created review app");
       } catch (e) {
         // A 409 is a conflict, which means the app already exists
