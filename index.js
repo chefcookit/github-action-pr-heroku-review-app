@@ -17,7 +17,6 @@ Toolkit.run(
     const version = pr.head.sha;
     const fork = pr.head.repo.fork;
     const pr_number = pr.number;
-    const repo_url = pr.head.repo.html_url;
     const source_url = `https://${user_name}:${token}@api.github.com/repos/${pr.head.repo.full_name}/tarball/${branch}`;
 
     let repo_id;
