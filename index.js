@@ -124,6 +124,7 @@ Toolkit.run(
             }
           }
         });
+        console.log("resp: ", resp);
         tools.log.complete("Created review app");
       } catch (e) {
         // A 409 is a conflict, which means the app already exists
