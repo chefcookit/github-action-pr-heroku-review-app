@@ -8,8 +8,8 @@ Toolkit.run(
   async tools => {
     const pr = tools.context.payload.pull_request;
 
-    const user_name = pr.user.login;
-    const token = process.env.GITHUB_TOKEN;
+    const user_name = "cookit-ci";
+    const token = process.env.COOKIT_CI_TOKEN;
 
     // Required information
     const event = tools.context.event;
